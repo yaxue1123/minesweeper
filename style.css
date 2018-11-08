@@ -1,0 +1,77 @@
+html {
+    height: 100%;
+}
+
+body {
+    position: relative;
+    margin: 0;
+    min-height: 100%;
+    max-height: 100%;
+    font-size: 1em;
+}
+
+.head-pic {
+    height: 3em;
+    width: 3em;
+    margin: .5em;
+}
+
+header, nav ul, section, footer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    list-style: none;
+    justify-content: center;
+    align-items: center;
+}
+header {
+    width: 100%;
+}
+nav {
+    background-color: black;
+    width: 100%;
+}
+
+section {
+    padding: 3% 20%;
+}
+
+nav ul{
+    font-size: 1em;  
+    color: #FFF;  
+}
+
+nav ul li {
+    padding: .5em;
+}
+
+button {
+    background-color: #e7e7e7;
+    height: 2em;
+    width: 2em;
+    border: 1px solid #000;
+    color: black;
+    padding: 1em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    
+}
+
+.bomb_count {
+    color: red;
+}
+
+footer {
+    position: absolute;
+    height: 10em;
+    width: 100%;
+    bottom: 0;
+    background-color: #000;
+    color: #FFF;
+}
+
+#minefield {
+   
+}
