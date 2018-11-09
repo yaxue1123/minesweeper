@@ -15,7 +15,12 @@
     </header>
     <nav>
         <ul>
-            <li><a>Game</a></li>
+            <select id = "level">Game
+                    <option>Beginner</option>
+                    <option>Intermediate</option>
+                    <option>Expert</option>
+                    <option>Custome</option>
+            </select>
             <li><a>Option</a></li>
             <li><a>Help</a></li>
         </ul>
@@ -29,102 +34,50 @@
         Copyright Yaxue Guo 2018
     </footer>
     <script>
-        // Disable context menu on the page completely.
-        $(document).contextmenu(function() {
-            return true;
-        });
-
-        // Decide the size of mine.
+        // Decide the size of mine, 8*8 and 10 bombs at default.
         let height = 8;
         let width = 8;
-
-        // Randomly creates the number of bombs.
-        // The number of mines should be at least 1 and at most the size of the minefield-1.
-        // In this case use random num, can also use fixed number based on difficulty level.
-        let total_bomb = 8; //Math.floor(Math.random() * (height * width - 1) + 1);
+        let total_bomb = 10; 
 
         let mine = new Mine(height, width, total_bomb);
-        
-        let minefield = mine.createMine();
+
+        mine.drawMine();
 
         let userFoundBomb = 0;
 
         let userMarked = 0;
 
-        // Draw the mine field with buttons.
-        function drawMine(){
-            // Draw the mine using buttons.
-            // Set each button with id i-j to refer to the location in the 2d array. 
-            for(let i = 1; i <= height; i++){
-                $("#minefield").append("<div>");
-                for (let j = 1; j <= width; j++){
-                    $("#minefield").append("<button x = " + i + " y = " + j + 
-                    " hasBomb = " + minefield[i][j] + " id = " + i + "-" + j + 
-                    " clicked = 0" + ">" + "</button>");
-                }
-                $("#minefield").append("</div>");
+
+        // Game level: 8*8 for beginner (10 bombs), 16 * 16 for intermediate (40 bombs),
+        // 40 wide * 30 tall for expert (99 bombs),
+        // also allow users to customize.
+        $("#level").change(function() {
+            if ($(this).val() === "Beginner") {
+                height = 8;
+                width = 8;
+                total_bomb = 20;
+                
+            } else if ($(this).val() === "Intermediate") {
+                height = 16;
+                width = 16;
+                total_bomb = 40;
+            } else if ($(this).val() === "Expert") {
+                height = 30;
+                width = 40;
+                total_bomb = 99;
             }
-        }
-
-        drawMine();
-
-        // Calculate how many surrounding bombs.
-        // Input: int i and j. i ranges from [1, height], j ranges from [1, width].
-        function countBomb(i, j) {
-            return minefield[i-1][j-1] + minefield[i-1][j] + minefield[i-1][j+1] +
-                    minefield[i][j-1] + minefield[i][j+1] +
-                    minefield[i+1][j-1] + minefield[i+1][j] + minefield[i+1][j+1];
-
-        }
-
-        // When a field's bomb count is 0, then unreveal the 8 fields around it. 
-        // Iterate until all the neighbors have non-zero bomb count.
-        function unreveal_neighbor(x, y) {
-
-        }
-     
-        // Input: the id of button.
-        function clickButton(id) {
-            let cur_button = $("#"+id);
-
-            cur_button.css("background-color", "white");
-            cur_button.attr("clicked", 1);
-
-            if(parseInt(cur_button.attr("hasBomb")) === 1){
-                alert("Bomb!!!");
-                location.reload();
-            } else {
-                // See if surrounding has bomb.
-                let x = parseInt(cur_button.attr("x"));
-                let y = parseInt(cur_button.attr("y"));
-                let count = countBomb(x, y);
-                if (count !== 0) {
-                    cur_button.html("<a class = 'bomb_count'>" + count + "</a>");
-                } else {
-                    // If the current field has no bomb, then explore the adjacent ones (8 at max).
-                    // Keep exploring until find bomb.
-                    cur_button.text("");
-                    // Traverse all adjacent field.
-                    for (let i = x - 1; i <= x + 1; i++) {
-                        for (let j = y - 1; j <= y + 1; j++) {
-                            // Generate button id.
-                            let adj_id = i + "-" + j;
-                            console.log(adj_id + " " + $("#"+adj_id).attr("clicked"));
-                            // Fake click on unclicked ones.
-                            if ($("#"+adj_id).attr("clicked") === '0') {
-                                clickButton(adj_id);
-                            }
-                        }
-                    }
-                }
-            }
-
-        }
-
-        $("button").click(function() {
-            clickButton($(this).attr("id"));
         });
-            
+
+        // Disable context menu on the mine field completely.
+        $("#minefield").contextmenu(function() {
+            return true;
+        });
+
+        // When user left-click a button;
+        $("button").click(function() {
+            mine.clickButton($(this).attr("id"));
+        });
+
         // User can right click to mark bomb.
         // User wins when marking all bombs.
         $("button").mousedown(function(e) {
@@ -142,7 +95,6 @@
                 // If the user marks is bomb, record this.
                 if ($(this).attr("hasBomb") === "1") {
                     userFoundBomb += 1;
-                    console.log("found bomb:" + userFoundBomb);
                 }
                 // If user found all bombs, win!
                 if (userFoundBomb === total_bomb) {
@@ -150,7 +102,6 @@
                 }
             }
         });
-
     </script>
 </body>
 </html>
