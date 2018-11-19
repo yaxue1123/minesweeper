@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-109245362-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-109245362-3');
+    </script>
+    <title>Minesweeper</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="Shortcut Icon" href="mine.jpg">
+    <link rel='stylesheet' href='style.css'/>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="http://rawgit.com/pisi/Longclick/master/jquery.longclick-min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Monoton|Neucha|Roboto">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <script src="script.js"></script>
+</head>
+<body>
+    <header>
+        <img src="mine.jpg" class = "head-pic">
+        <h1>Minesweeper</h1>
+    </header>
+    <nav>
+        <ul>
+            <div class="dropdown">
+                <button class="dropbtn">
+                    <a>Level</a>&nbsp
+                    <i class="fas fa-caret-down fa-lg"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a id="beginner">Beginner</a>
+                    <a id="intermediate">Intermediate</a>
+                    <a id="expert">Expert</a>
+                </div>
+            </div>
+            <li><a id="scoreboard">Scoreboard</a></li>
+            <li><a id="instruction">Instruction</a></li>
+            <li><a id="about">About</a></li>
+        </ul>
+    </nav>
+    <section class="main">
+        <div class="control-field-1">
+            <a class="setting">Height:</a><input type="text" id="height" value="8"> 
+            <a class="setting">Width:</a><input type="text" id="width" value="8"> 
+            <a class="setting">Total Bombs:</a><input type="text" id="total-bomb" value="10"> 
+        </div>
+        <div class = "control-field-2">
+            <span class = "bomb-clock"><i class="fas fa-bomb fa-lg"></i><a id = "left-bomb"></a></span>
+            <span class = "bomb-clock"><i class="fas fa-stopwatch fa-lg"></i><a id = "timer">0</a></span>
+            <a class = "control-btn">New Game</a>
+        </div>
+        <div id = "mine-field">
+        </div>
+    </section>
+    <section class="score-page">
+        <h1>Scoreboard</h1>
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>Score</th>
+            </tr>
+            <tr>
+                <td>#1</td>
+                <td>0</td>
+            </tr>
+        </table>
+    </section>
+    <section class="instruction-page">
+        <h1>
+            Instruction
+        </h1>
+        <p>
+            <ul>
+                <li>
+                    You are presented with a board of squares. Some squares contain <i class='fas fa-bomb'></i>, others don't. 
+                    If you left click on a square containing a bomb, you lose, and all <i class='fas fa-bomb'></i> will appear, and 
+                    the fields that you wrongly marked as bomb will show as <i class='fas fa-times'></i>. 
+                    If you manage to find all bombs(mark them as <i class='far fa-flag'></i>), you win.
+                </li>
+                <li>
+                    <strong><em>Left click</em></strong> to reveal a field you find safe, and a number of 
+                    how many bombs around this field (above, below, left, right and 4 diagonals) will appear. 
+                    If this number is 0, then automatically open the 8 adjacent fields since it's safe to do so.
+                    When a clicked field has same already marked adjacent fields as it indicates, left click the revealed 
+                    field will automatically click on surrounding fields. If the marked has a wrong one, then fail. This can help
+                    you quickly clear fields instead of left clicking one by one.
+                </li>
+                <li>
+                    <strong><em>Right click</em></strong> or <strong><em>shift + left click </em></strong> 
+                    to mark a field that you think has bomb, the a <i class='far fa-flag'></i> will appear to remind you there is a bomb. 
+                    Repeat once to cancel mark, but a <i class="fas fa-question"></i> will appear, which
+                    you can use to mark unsured area. Repeat again to cancel the <i class="fas fa-question"></i> and 
+                    return to original status.
+                </li>
+                <li>
+                    On the game panel, you are allowed to customize your minefield by inputting numbers. The height should be 
+                    within [8, 30], and width [8, 40]. The total bomb should be [1, height * width - 1]. Once your input your desirable
+                    three fields, click new game button to start a new game. You can start a new game at any time. 
+                </li>
+                <li>
+                   There are also three default set difficulty levels including beginner, Intermediate and Expert that you can choose
+                   from the drop down menu, which have 8 * 8 * 10, 16 * 16 * 40, and 30 * 40 * 160 respectively regarding height * width * bombs.
+                </li>
+                <li>
+                    The number of unmarked bombs and a timer are shown above the minefield. The timer starts once you click on the minefield, or 
+                    click the new game button, or choose any default difficulty level from the drop down menu.
+                </li>
+                <li>
+                    When you win a game, you will get a score calculated based on time and difficulty (no fancy algorithm, just a simple 
+                    calculation which I think makes some sense, find it from the source code haha). Click scoreboard on the top menu to see 
+                    all your score history ranked from high to low (no global score record since this is only a front-end game and no score 
+                    record before your last refresh of the page).
+                </li>
+                <li>
+                    This game currently only supports web version (you need play it in the browser of your computer), and make sure your 
+                    window is big enough for the expert level (or the minefield will wrap and no way to play).
+                </li>
+                <li>
+                    Ps: When I read the requirements of this assignments, I was thinking why it was so lengthy, can't KMP make it 
+                    simpler? Well, when I started to write this instruction on my own, I came to realize it is impossible to be succinct.
+                    Anyway, forget about the wordy instruction and a list trying to be logical... Just start you game and have fun! <i class="fas fa-gamepad"></i>
+                </li>
+            </ul>
+        </p>
+    </section>
+    <section class="about-page">
+        <h1>
+            History
+        </h1>
+        <p>
+            Minesweeper is based off the original Windows version of the game first released by Microsoft 
+            in 1990. Every release of Windows since has had a version of the game.
+        </p>
+        <p>
+            The history of Minesweeper goes back to the early 80's with many mine-type 
+            games being released in that period. The earliest proven ancestor of Minesweeper 
+            is Mined-Out, which was released for the Sinclair Spectrum in 1983.
+        </p>
+        <p>
+            The game evolved over the 1980's into the game we love today. Most of the key features 
+            like right-click (to mark a mine) and numbers (showing you adjacent bombs) evolved in the 
+            last 2-3 years of the 80's.
+        </p>
+        <p>
+            This browser based version is developed by Yaxue Guo for the purpose of UNC-CH COMP 426 assignment. 
+            I designed this version in the principle of simpleness in style as well as completeness of function. 
+            By the way, no fancy js animation because less is more (actually because I don't have time and 
+            the 426 final is coming next week <i class="far fa-sad-cry"></i>).
+        </p>
+    </section>
+    <footer>
+        Copyright Yaxue Guo 2018
+    </footer>
+    <script>
+        // #############################################################################
+        // ################################# Timer and Status ##########################
+        // Set a timer starting at 0. Execuate countSecond to add time every 1000 millisecond (1 second).
+        // Max time is 999, which is about 16.65 minutes. If the user cannot figure it out in such 
+        // a period, forget about it ...
+        // Input: order of start, stop.
+        // Start the timer when user clicks new game button or originally click a field.
+        // Stop the timer when user suceeds or fails the game.
+        let time = 0;
+        let time_stop = true;
+        let interval = setInterval(function() {
+            if (!time_stop) {
+                if (time < 999) {
+                    time += 1;
+                }
+                // Show passed time on the game page.
+                $("#timer").text(time); 
+            }
+        }, 1000);
+
+        // Disable context menu on the page completely.
+        $("#mine-field").contextmenu(function() {
+            return false;
+        });
+        // A variable to track game status: init, inactive (win or fail), active.
+        // Only in active mode can click mine field.
+        let status = "init";
+
+        // Toggle between different menu selection.
+        // ################################################################################
+        // ################################# Scorebord ####################################
+        // Current user's scoreboard.
+        // Score value is the time a user takes to win a game. The smaller the score, the higher the rank is.
+        // ########## improve: use combination of difficulty level and time? width * height / time. 
+        let score = [0];
+        
+        $("#scoreboard").click(function() {
+            $(".score-page").css("display", "flex");
+            $(".main").css("display", "none");
+            $(".instruction-page").css("display", "none");
+            $(".about-page").css("display", "none");
+        });
+
+
+        // ################################################################################
+        // ################################ Introduction ##################################
+        $("#instruction").click(function() {
+            $(".score-page").css("display", "none");
+            $(".main").css("display", "none");
+            $(".instruction-page").css("display", "block");
+            $(".about-page").css("display", "none");
+        });
+
+        // ################################################################################
+        // ################################### About ######################################
+        $("#about").click(function() {
+            $(".score-page").css("display", "none");
+            $(".main").css("display", "none");
+            $(".instruction-page").css("display", "none");
+            $(".about-page").css("display", "block");
+        });
+
+        // ################################################################################
+        // #################################### Level #####################################
+        $(".dropdown").click(function() {
+            if ($(".main").css("display") === "none") {
+                $(".score-page").css("display", "none");
+                $(".main").css("display", "flex");
+                $(".instruction-page").css("display", "none");
+                $(".about-page").css("display", "none");
+            }
+        });
+
+        // Start a new game based on user's choice or input.
+        // User change game level by drop down list.
+        $("#beginner").click(function(){
+            $("#height").val(8);
+            $("#width").val(8);
+            $("#total-bomb").val(10);  
+
+            // Fake click on new game.
+            $(".control-btn").click();
+        })
+
+        $("#intermediate").click(function(){
+            $("#height").val(16);
+            $("#width").val(16);
+            $("#total-bomb").val(40);  
+
+            // Fake click on new game.
+            $(".control-btn").click();
+        })
+
+        $("#expert").click(function(){
+            $("#height").val(30);
+            $("#width").val(40);
+            $("#total-bomb").val(160);  
+
+            // Fake click on new game.
+            $(".control-btn").click();
+        })
+
+        $(".control-btn").click(function() {
+            // Test if the use customized game is legal. 
+            // Height <- [8, 30], width <- [8, 40], num of bombs <- [1, height * width - 1]
+            let height = parseInt($("#height").val());
+            let width = parseInt($("#width").val());
+            let total_bomb = parseInt($("#total-bomb").val());
+            let control_field = $(".control-field-1");
+
+            // Remove warning first.
+            $("div").remove(".input-warning");
+
+            if (height > 30 || height < 8) {
+                time_stop = true;
+                $("<div class='input-warning'>Please input valid height between 8 and 30.</div>")
+                    .insertAfter(control_field);
+            } else if (width > 40 || width < 8) {
+                time_stop = true;
+                $("<div class='input-warning'>Please input valid width between 8 and 40.</div>")
+                    .insertAfter(control_field);
+            } else if ($("#total-bomb").val() === "" || total_bomb < 1 || total_bomb > height * width - 1) {
+                time_stop = true;
+                $("<div class='input-warning'>Please input valid number of bomb between 1 and number of fields - 1.</div>")
+                    .insertAfter(control_field);
+            } else {
+                // If all input is valid, trigger a new game.
+                // Remove the old mine field.
+                $(".btn").remove();
+                // Remove all breaks.
+                $("br").remove();
+                // Remove current message.
+                $(".message-field").remove();
+                // Draw new minefield.
+                newGame();
+                // Mark game status as "ongoing".
+                status = "active";
+                // Start the timer.
+                // time should start from 0.
+                time = 0;
+                time_stop = false;
+            }
+        });
+
+        function newGame(){
+            // Game level: 8*8 for beginner (10 bombs), 16 * 16 for intermediate (40 bombs),
+            // 40 wide * 30 tall for expert (160 bombs),
+            // also allow users to customize.
+            let height = parseInt($("#height").val());
+            let width = parseInt($("#width").val());
+            let total_bomb = parseInt($("#total-bomb").val());
+
+            let mine = new Mine(height, width, total_bomb);
+            
+            let minefield = mine.createMine();
+
+            let userFoundBomb = 0;
+
+            let userMarked = 0;
+
+            $("#left-bomb").css("color", "black");
+
+            // Draw the mine field with buttons.
+            function drawMine(){
+                // Draw the mine using buttons.
+                // Set each button with id i-j to refer to the location in the 2d array. 
+                // Attribute clicked stores how many times this button is clicked.
+                for(let i = 1; i <= height; i++){
+                    for (let j = 1; j <= width; j++){
+                        $("#mine-field").append("<a class = 'btn' x = " + i + " y = " + j + 
+                        " hasBomb = " + minefield[i][j] + " id = " + i + "-" + j + 
+                        " clicked = 0 rclicked = 0" + ">" + "</a>");
+                    }
+                    $("#mine-field").append("<br>");
+                }
+            }
+
+            drawMine();
+
+            // Add left-bomb based on user input. Initial: total bombs.
+            $("#left-bomb").text(total_bomb);
+
+            // Calculate how many surrounding bombs.
+            // Input: int i and j. i ranges from [1, height], j ranges from [1, width].
+            function countBomb(i, j) {
+                return minefield[i-1][j-1] + minefield[i-1][j] + minefield[i-1][j+1] +
+                        minefield[i][j-1] + minefield[i][j+1] +
+                        minefield[i+1][j-1] + minefield[i+1][j] + minefield[i+1][j+1];
+
+            }
+
+            // Calculate how many surrounding bombs.
+            // If a surrouding field rclicked attr is 1, then it is marked.
+            function countMarked(x, y) {
+                let marked = 0;
+                for (let i = x - 1; i < x + 2; i++) {
+                    for (let j = y - 1; j < y + 2; j++) {
+                        if($("#" + i + "-" + j).attr("rclicked") === '1') {
+                            marked += 1;
+                        }
+                    }
+                }
+                return marked;
+            }
+        
+            // Input: the id of button.
+            function clickButton(id) {
+                // Initial click.
+                if(time_stop === true && status === 'init') {
+                     // Mark game status as "ongoing".
+                    status = "active";
+                    // Start the timer.
+                    // time should start from 0.
+                    time = 0;
+                    time_stop = false;
+                }
+
+                let cur_button = $("#"+id);
+
+                // Change clicked fields' background color and track clicked time of right click.
+                cur_button.css("background-color", "white");
+                cur_button.attr("clicked", 1);
+
+                if(parseInt(cur_button.attr("hasBomb")) === 1){
+                    // Mark status as lose.
+                    status = "inactive";
+                    // Stop the timer.
+                    time_stop = true;
+                    // Show failure message.
+                    $(".main").append("<div class = 'message-field'></div>");
+                    $(".message-field").append("<div>Bomb! You failed.</div>");
+                    // Mark all mine fields as bomb.
+                    $(".btn[hasbomb='1']").html("").append("<span class='btn-span'><i class='fas fa-bomb'></i></span>");
+                    // Mark all wrongly marked field if any.
+                    $(".btn[hasbomb='0'][rclicked='1']").html("")
+                        .append("<span class='btn-span'><i class='fas fa-times'></i></span>");
+                } else {
+                    // See if surrounding has bomb.
+                    let x = parseInt(cur_button.attr("x"));
+                    let y = parseInt(cur_button.attr("y"));
+                    let count = countBomb(x, y);
+                    if (count !== 0) {
+                        // First click. Unreveal the field.
+                        if (cur_button.has("span").length === 0) {
+                            cur_button.html("<span class = 'btn-span'>" + count + "</span>");
+                        } else {
+                            // Check surrounding marked count.
+                            // If surrounding marked equals to the num on this field.
+                            // Fake click all surrounding fields.
+                            if (countMarked(x, y) === count) {
+                                // if mark count is same with bomb count, fake click all surrounding field.
+                                for (let i = x - 1; i <= x + 1; i++) {
+                                    for (let j = y - 1; j <= y + 1; j++) {
+                                        // Generate button id.
+                                        let adj_id = i + "-" + j;
+                                        // Fake click on unclicked ones.
+                                        if ($("#"+adj_id).attr("clicked") === '0' &&
+                                            $("#"+adj_id).attr("rclicked") !== '1') {
+                                            clickButton(adj_id);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        // If the current field has no bomb, then explore the adjacent ones (8 at max).
+                        // Keep exploring until find bomb.
+                        // Traverse all adjacent field.
+                        for (let i = x - 1; i <= x + 1; i++) {
+                            for (let j = y - 1; j <= y + 1; j++) {
+                                // Generate button id.
+                                let adj_id = i + "-" + j;
+                                // Fake click on unclicked ones.
+                                if ($("#"+adj_id).attr("clicked") === '0' && 
+                                    $("#"+adj_id).attr("rclicked") === '0') {
+                                    clickButton(adj_id);
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            // User can right click to mark bomb.
+            // User wins when marking all bombs.
+            $(".btn").mousedown(function(e) {
+                // ################## CLICK ######################
+                // reveal the field.
+                if (e.which === 1 && !e.shiftKey && (status === "active" || status === "init") 
+                        && $(this).attr("rclicked") === '0') {
+                    clickButton($(this).attr("id"));
+                }
+                // ################## RIGHT CLICK OR SHIFT + CLICK######################
+                // mark or unmark the field.
+                // on computer: right click or shift + click; mobile: long click.
+                // first right click: X to mark bomb, second: ? to mark unsure, third: cancel mark.
+                if (parseInt($(this).attr("clicked")) === 0 && 
+                    (e.which === 3 || (e.shiftKey && e.which === 1)) || $(this).longclick(500) && 
+                    status === "active") {
+                    let rclicked_times = parseInt($(this).attr("rclicked"));
+                    // Base on current rclicked value to decide next value.
+                    switch (rclicked_times) {
+                        case 0: 
+                            rclicked_times = 1;
+                            break;
+                        case 1:
+                            rclicked_times = 2;
+                            break;
+                        case 2:
+                            rclicked_times = 0;
+                            break;
+                    }
+
+                    $(this).attr("rclicked", rclicked_times);
+
+                    // limit the mark number within the total bomb number's range.
+                    // when equals, only allow change from flag to ? to null, no more flag!
+                    // ##### FLAG ######
+                    if (userMarked <= total_bomb) {
+                        // Flag.
+                        if ($(this).attr("rclicked") === '1' && userMarked < total_bomb) {
+                            if (userMarked < total_bomb) {
+                                $(this).html("<span class='btn-span'><i class='far fa-flag'></i></span>");
+                            }
+                            userMarked += 1; 
+                            // If the user marks is bomb, record this.
+                            if ($(this).attr("hasBomb") === "1") {
+                                userFoundBomb += 1;
+                            }
+                            // Change left bombs by - 1.
+                            $("#left-bomb").text(total_bomb - userMarked);
+                        } else if ($(this).children().children().hasClass('fa-flag')) {
+                            // ?.
+                            // only flag can be changed to ?.
+                            $(this).html("<span class='btn-span'><i class='fas fa-question'></i></span>");
+                            // Now user canceled the marked field.
+                            userMarked -= 1;
+                            // update left bombs.
+                            $("#left-bomb").text(total_bomb - userMarked);
+                            // If the user orginal mark is bomb, erase the correct mark.
+                            if ($(this).attr("hasBomb") === "1") {
+                                userFoundBomb -= 1;
+                            }   
+                        } else if ($(this).children().children().hasClass('fa-question')) {
+                            // only apply to ?.
+                            $(this).text("");
+                        }
+
+                        if(userMarked === total_bomb) {
+                            $("#left-bomb").css("color", "red");
+                        } else {
+                            $("#left-bomb").css("color", "black");
+                        }
+                    } 
+    
+                    // If user found all bombs, win!
+                    if (userFoundBomb === total_bomb) {
+                        // User has found all bombs. Auto click the rest ones.
+                        $(".btn[clicked='0'][rclicked='0']").css("background-color", "#FFF");
+                        // Add message indicating success.
+                        $(".main").append("<div class = 'message-field'></div>");
+                        $(".message-field").append("Congratulations! You win!");
+                        // Give current score and a link to scoreboard.
+                        let this_score = calculateScore(time);
+                        $(".message-field")
+                            .append("<div class='score-list'>Score: <a class='setting'>" + this_score + "</a></div>");
+                        // Mark status as win.
+                        status = "inactive";
+                        score.push(this_score);
+                        // Sort score from high to low.
+                        score.sort(function(x, y) {
+                            return x < y ? 1 : -1;
+                        });
+                        // Update score board. Remove the old one.
+                        $("tr").remove();
+                        $("table").append("<tr><td>Rank</td><td>Score</td></tr>");
+                        for (let s in score) {
+                            if (s < score.length - 1) {
+                                // If has user score record, don't need the score of 0.
+                                $("table").append("<tr><td>#" + (parseInt(s) + 1) + "</td><td>" 
+                                + score[s] + "</td></tr>");
+                            }
+                        }
+                        // Stop the timer.
+                        time_stop = true;
+                    }
+                }
+            });
+
+            function calculateScore(time) {
+                let height = parseInt($("#height").val());
+                let width = parseInt($("#width").val());
+                let total_bomb = parseInt($("#total-bomb").val());
+
+                return Math.round(Math.pow(total_bomb, 2) * height * width / time);
+            }
+        }
+        
+        // Default new game when user open this page.
+        newGame();
+
+        // Dropdown button.
+        // drop-down menu.
+        // When the user is on the game panel, effective dropdown. Or user clicks to go back to game panel.
+        if ($(".main").css("display") === "flex") {
+            document.querySelectorAll(".dropbtn").forEach(function(el){
+                el.addEventListener("click",function(e){
+                    var el = e.currentTarget.nextElementSibling;
+
+                    if (el.classList.contains("dropdown-content-show")){
+                        el.classList.remove("dropdown-content-show");
+                        el.classList.add("dropdown-content");
+                    } else{
+                        el.classList.remove("dropdown-content");
+                        el.classList.add("dropdown-content-show");
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>
