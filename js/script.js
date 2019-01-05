@@ -1,5 +1,5 @@
 $("document").ready(function(){
-     // #############################################################################
+        // #############################################################################
         // ################################# Timer and Status ##########################
         // Set a timer starting at 0. Execuate countSecond to add time every 1000 millisecond (1 second).
         // Max time is 999, which is about 16.65 minutes. If the user cannot figure it out in such 
@@ -142,7 +142,7 @@ $("document").ready(function(){
                 time_stop = false;
             }
         });
-
+   
         function newGame(){
             // Game level: 8*8 for beginner (10 bombs), 16 * 16 for intermediate (40 bombs),
             // 40 wide * 30 tall for expert (160 bombs),
