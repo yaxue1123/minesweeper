@@ -126,7 +126,7 @@ class Mine {
 
 ## Author
 
-* *Yaxue Guo* independently designed the UI, developed complete functions and tested the game. All codes were started from scratch.
+* *Yaxue Guo* independently designed UI, developed functions and tested the game. All codes started from scratch.
 
 ## Acknowledgement
 
