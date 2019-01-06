@@ -297,8 +297,7 @@ $("document").ready(function(){
                 // on computer: right click or shift + click; mobile: long click.
                 // first right click: X to mark bomb, second: ? to mark unsure, third: cancel mark.
                 if (parseInt($(this).attr("clicked")) === 0 && 
-                    (e.which === 3 || (e.shiftKey && e.which === 1)) || $(this).longclick(500) && 
-                    status === "active") {
+                    (e.which === 3 || (e.shiftKey && e.which === 1))) {
                     let rclicked_times = parseInt($(this).attr("rclicked"));
                     // Base on current rclicked value to decide next value.
                     switch (rclicked_times) {

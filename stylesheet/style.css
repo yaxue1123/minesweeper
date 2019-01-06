@@ -78,6 +78,7 @@ nav ul{
 
 nav ul li {
     padding: .5em;
+    cursor: pointer;
 }
 
 button {
